@@ -1,11 +1,9 @@
 package com.zam.tictactoelove;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,37 +22,39 @@ public class PlayMatchActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout llRed, llYellow;
     private TextView tvRedHeart, tvYellowHeart;
     private ImageView iv1, iv2, iv3, iv4, iv5, iv6, iv7, iv8, iv9;
-    private List<int[]> combinationList=new ArrayList<>();
-    private int[] cellPositions={-1,0,0,0,0,0,0,0,0,0};
-    private int playerTurn=1;
-    private int totalSelectedCells=1;
+    private final List<int[]> combinationList = new ArrayList<>();
+    private final int[] cellPositions = {-1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private int playerTurn = 1;
+    private int totalSelectedCells = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_play_match);
 
-        llRed=findViewById(R.id.ll_red);
-        llYellow=findViewById(R.id.ll_yellow);
+        llRed = findViewById(R.id.ll_red);
+        llYellow = findViewById(R.id.ll_yellow);
 
-        tvRedHeart=findViewById(R.id.tv_red_heart);
-        tvYellowHeart=findViewById(R.id.tv_yellow_heart);
+        tvRedHeart = findViewById(R.id.tv_red_heart);
+        tvYellowHeart = findViewById(R.id.tv_yellow_heart);
 
-        tvRedHeart.setText(getIntent().getStringExtra("FIRST_PLAYER"));
-        tvYellowHeart.setText(getIntent().getStringExtra("SECOND_PLAYER"));
+        tvRedHeart.setText(getIntent().getStringExtra(AppConstants.FIRST_PLAYER));
+        tvYellowHeart.setText(getIntent().getStringExtra(AppConstants.SECOND_PLAYER));
 
-        iv1=findViewById(R.id.iv_1);
-        iv2=findViewById(R.id.iv_2);
-        iv3=findViewById(R.id.iv_3);
-        iv4=findViewById(R.id.iv_4);
-        iv5=findViewById(R.id.iv_5);
-        iv6=findViewById(R.id.iv_6);
-        iv7=findViewById(R.id.iv_7);
-        iv8=findViewById(R.id.iv_8);
-        iv9=findViewById(R.id.iv_9);
+        iv1 = findViewById(R.id.iv_1);
+        iv2 = findViewById(R.id.iv_2);
+        iv3 = findViewById(R.id.iv_3);
+        iv4 = findViewById(R.id.iv_4);
+        iv5 = findViewById(R.id.iv_5);
+        iv6 = findViewById(R.id.iv_6);
+        iv7 = findViewById(R.id.iv_7);
+        iv8 = findViewById(R.id.iv_8);
+        iv9 = findViewById(R.id.iv_9);
 
+        setupViews();
+    }
+
+    private void setupViews() {
         iv1.setOnClickListener(this);
         iv2.setOnClickListener(this);
         iv3.setOnClickListener(this);
@@ -65,31 +65,18 @@ public class PlayMatchActivity extends AppCompatActivity implements View.OnClick
         iv8.setOnClickListener(this);
         iv9.setOnClickListener(this);
 
-        combinationList.add(new int[]{-1,-1,-1});
+        combinationList.add(new int[]{-1, -1, -1});
 
-        combinationList.add(new int[]{1,2,3});
-        combinationList.add(new int[]{4,5,6});
-        combinationList.add(new int[]{7,8,9});
+        combinationList.add(new int[]{1, 2, 3});
+        combinationList.add(new int[]{4, 5, 6});
+        combinationList.add(new int[]{7, 8, 9});
 
-        combinationList.add(new int[]{1,4,7});
-        combinationList.add(new int[]{2,5,8});
-        combinationList.add(new int[]{3,6,9});
+        combinationList.add(new int[]{1, 4, 7});
+        combinationList.add(new int[]{2, 5, 8});
+        combinationList.add(new int[]{3, 6, 9});
 
-        combinationList.add(new int[]{1,5,9});
-        combinationList.add(new int[]{3,5,7});
-
-        llRed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        llYellow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        combinationList.add(new int[]{1, 5, 9});
+        combinationList.add(new int[]{3, 5, 7});
     }
 
     @Override
@@ -112,22 +99,33 @@ public class PlayMatchActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void selectCell(ImageView iv, int position) {
-        cellPositions[position]=playerTurn;
+        cellPositions[position] = playerTurn;
 
-        if (playerTurn==1) {
+        if (playerTurn == 1) {
             iv.setImageResource(R.drawable.heart_red);
-            if (isMatchOver()) new MatchOverDialog().showDialog(this,tvRedHeart.getText()+" "+getString(R.string.game_over_won));
-            else if (totalSelectedCells==9) new MatchOverDialog().showDialog(this,getString(R.string.game_over_draw));
-            else {
+            if (isMatchOver()) {
+                new MatchOverDialog().showDialog(
+                        this, tvRedHeart.getText() + " " + getString(R.string.game_over_won)
+                );
+            } else if (totalSelectedCells == 9) {
+                new MatchOverDialog().showDialog(
+                        this, getString(R.string.game_over_draw)
+                );
+            } else {
                 changePlayerTurn();
                 totalSelectedCells++;
             }
-        }
-        else {
+        } else {
             iv.setImageResource(R.drawable.heart_yellow);
-            if (isMatchOver()) new MatchOverDialog().showDialog(this,tvYellowHeart.getText()+" "+getString(R.string.game_over_won));
-            else if (totalSelectedCells==9) new MatchOverDialog().showDialog(this,getString(R.string.game_over_draw));
-            else {
+            if (isMatchOver()) {
+                new MatchOverDialog().showDialog(
+                        this, tvYellowHeart.getText() + " " + getString(R.string.game_over_won)
+                );
+            } else if (totalSelectedCells == 9) {
+                new MatchOverDialog().showDialog(
+                        this, getString(R.string.game_over_draw)
+                );
+            } else {
                 changePlayerTurn();
                 totalSelectedCells++;
             }
@@ -136,11 +134,11 @@ public class PlayMatchActivity extends AppCompatActivity implements View.OnClick
 
     private boolean isMatchOver() {
         int [] combination;
-        for (int i=1; i<combinationList.size(); i++) {
-            combination=combinationList.get(i);
-            if (cellPositions[combination[0]]==playerTurn &&
-                cellPositions[combination[1]]==playerTurn &&
-                cellPositions[combination[2]]==playerTurn) {
+        for (int i = 1; i < combinationList.size(); i++) {
+            combination = combinationList.get(i);
+            if (cellPositions[combination[0]] == playerTurn &&
+                cellPositions[combination[1]] == playerTurn &&
+                cellPositions[combination[2]] == playerTurn) {
                 return true;
             }
         }
@@ -148,13 +146,12 @@ public class PlayMatchActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void changePlayerTurn() {
-        if (playerTurn==1) {
-            playerTurn=2;
+        if (playerTurn == 1) {
+            playerTurn = 2;
             llYellow.setBackgroundResource(R.drawable.heart_border_highlight);
             llRed.setBackgroundResource(R.drawable.heart_border);
-        }
-        else {
-            playerTurn=1;
+        } else {
+            playerTurn = 1;
             llYellow.setBackgroundResource(R.drawable.heart_border);
             llRed.setBackgroundResource(R.drawable.heart_border_highlight);
         }
@@ -167,25 +164,17 @@ public class PlayMatchActivity extends AppCompatActivity implements View.OnClick
             dialog.setContentView(R.layout.game_over_dialog);
             dialog.setCancelable(false);
 
-            TextView tvMatchOver=(TextView) dialog.findViewById(R.id.tv_game_over);
+            TextView tvMatchOver = (TextView) dialog.findViewById(R.id.tv_game_over);
             tvMatchOver.setText(message);
 
-            Button bRestart=(Button) dialog.findViewById(R.id.b_restart);
-            Button bExit=(Button) dialog.findViewById(R.id.b_exit);
+            Button bRestart = (Button) dialog.findViewById(R.id.b_restart);
+            Button bExit = (Button) dialog.findViewById(R.id.b_exit);
 
-            bRestart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    restartMatch();
-                    dialog.dismiss();
-                }
+            bRestart.setOnClickListener(v -> {
+                restartMatch();
+                dialog.dismiss();
             });
-            bExit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
+            bExit.setOnClickListener(v -> finish());
 
             dialog.show();
         }
@@ -207,11 +196,6 @@ public class PlayMatchActivity extends AppCompatActivity implements View.OnClick
         this.exit = true;
         Toast.makeText(this, getString(R.string.exit_game), Toast.LENGTH_SHORT).show();
 
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                exit=false;
-            }
-        }, 2000);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> exit = false, AppConstants.DELAY_MILLIS);
     }
 }

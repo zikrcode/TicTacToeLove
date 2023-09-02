@@ -1,22 +1,21 @@
 <resources>
+
     <string name="app_name">Tic Tac Toe Love</string>
 
-    //SplashScreenActivity
-    <string name="zam">zikr.and.mehr</string>
-
-    //MainActivity
+    <!-- MainActivity -->
     <string name="player_names">Enter player names</string>
     <string name="first_player">First Player</string>
     <string name="second_player">Second Player</string>
     <string name="start_game">Start Match</string>
     <string name="enter_names">Please enter player names</string>
 
-    //PlayMatchActivity
+    <!-- PlayMatchActivity -->
     <string name="exit_game">"Press again to exit."</string>
     <string name="game_over_won">won the match</string>
     <string name="game_over_draw">It is a draw!</string>
 
-    //game_over_dialog
+    <!-- game_over_dialog -->
     <string name="restart">Restart</string>
     <string name="exit">Exit</string>
+
 </resources>
